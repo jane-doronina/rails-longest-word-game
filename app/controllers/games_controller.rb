@@ -14,12 +14,20 @@ class GamesController < ApplicationController
   def score
     @grid = params[:grid]
     @answer = params[:word]
+    if session[:score].nil?
+      @score = 0
+    else
+      @score = session[:score]
+    end
+
     if check_grid(@answer.upcase, @grid) == false
       @result = "Sorry, but #{@answer.upcase} can't be built out of #{@grid}"
     elsif english_word(@answer) == false
       @result = "Sorry, but #{@answer.upcase} doesn't seem to be a valid English word..."
     else
       @result = "Congratulations! #{@answer.upcase} is a valid English word!"
+      @score += (@answer.length * 2)
+      session[:score] = @score
     end
     @result
   end
